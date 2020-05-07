@@ -4,10 +4,16 @@
 
 using namespace simpleConfig;
 
+
 TEST_CASE("Constructor") {
   SECTION("Basic construction") {
-    REQUIRE_NOTHROW([](){
+    REQUIRE_NOTHROW([&](){
       SimpleConfig config ("../config/test.config");
+    });
+
+    
+    REQUIRE_THROWS([&](){
+      SimpleConfig config ("../config/somefile.whwatever");
     });
   }
 }

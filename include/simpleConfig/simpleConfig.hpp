@@ -1,11 +1,11 @@
 #pragma once
 
-#include <string>
+#include <experimental/filesystem>
 
 namespace simpleConfig {
   class SimpleConfig {
   private:
-    std::string configFilePath_;
+    std::experimental::filesystem::path configFilePath_;
 
   public:
     SimpleConfig(const std::string &configFilePath);
