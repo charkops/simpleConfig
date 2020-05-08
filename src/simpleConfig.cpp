@@ -1,4 +1,4 @@
-#include "simpleConfig.hpp"
+#include "simpleConfig/simpleConfig.hpp"
 
 #include <experimental/filesystem>
 

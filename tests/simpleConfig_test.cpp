@@ -1,6 +1,6 @@
-#include "catch.hpp"
+#include "catch/catch.hpp"
 
-#include "simpleConfig.hpp"
+#include "simpleConfig/simpleConfig.hpp"
 
 using namespace simpleConfig;
 
