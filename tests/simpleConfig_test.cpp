@@ -17,4 +17,40 @@ TEST_CASE("Constructor") {
     //   SimpleConfig ("config/somefile.whwatever");
     // }, std::runtime_error);
   }
+};
+
+TEST_CASE("findWords") {
+  const std::string testLine ("  someValue : integer ? 3  ");
+  auto result = SimpleConfig::findWords(testLine);
+  REQUIRE(result.size() == 3);
+  auto name = result[0];
+  auto type = result [1];
+  auto value = result [2];
+  REQUIRE(name == "someValue");
+  REQUIRE(type == "integer");
+  REQUIRE(value == "3");
+
+  const std::string anotherTestLine = ":?";
+  result = SimpleConfig::findWords(anotherTestLine);
+  REQUIRE(result.size() == 3);
+  name = result[0];
+  type = result [1];
+  value = result [2];
+  REQUIRE(name == "");
+  REQUIRE(type == "");
+  REQUIRE(value == "");
 }
+
+TEST_CASE("isValidConfigLine") {
+
+  SECTION("Valid line") {
+    const std::string line ("someValue: string ? 'whatisthis'");
+    REQUIRE(SimpleConfig::isValidConfigLine(line));
+  };
+
+  SECTION("InvalidLine") {
+    // Comment
+    const std::string line (" someValue: integer ? ");
+    REQUIRE_FALSE(SimpleConfig::isValidConfigLine(line));
+  }
+};
