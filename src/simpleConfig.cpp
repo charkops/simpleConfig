@@ -1,5 +1,6 @@
 #include "simpleConfig/simpleConfig.hpp"
 
+#include <fstream>
 #include <experimental/filesystem>
 
 
@@ -50,9 +51,30 @@ namespace simpleConfig {
     return true;
   };
 
-  ConfigInfo SimpleConfig::parseConfigFile() {
-    ConfigInfo info;
-
-    return info;
+  bool SimpleConfig::isLineComment(const std::string &line) {
+    for (const auto c : line) {
+      if (c == ' ') continue;
+      if (c != '#')
+        return false;
+      else
+        return true;
+    }
+    return false;
   };
+
+  // If the configFilePath_ exists is none of this function's concern
+  bool SimpleConfig::isValidConfigFile() {
+    // Open file
+    const std::string filePath = configFilePath_.u8string();
+
+    // Read each line
+    std::ifstream file (filePath);
+    std::string line;
+    while (std::getline(file, line)) {
+      if (line.empty()) continue;
+      if (SimpleConfig::isLineComment(line)) continue;
+      if (!SimpleConfig::isValidConfigLine(line)) return false;
+    }
+    return true;
+  };  
 }

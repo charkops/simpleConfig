@@ -3,18 +3,6 @@
 #include <experimental/filesystem>
 
 namespace simpleConfig {
-
-  struct ConfigValue {
-    std::string name;
-    std::string type;
-  };
-
-  struct ConfigInfo {
-    int numberOfConfigValues;
-    std::vector<ConfigValue> configValues;
-  };
-
-
   class SimpleConfig {
   private:
     std::experimental::filesystem::path configFilePath_;
@@ -24,10 +12,9 @@ namespace simpleConfig {
     SimpleConfig(const std::string &configFilePath);
     ~SimpleConfig() = default;
     
-    ConfigInfo parseConfigFile();
-    ConfigValue parseLine(const std::string &line);
-
+    bool isValidConfigFile();
     static bool isValidConfigLine(const std::string &line);
+    static bool isLineComment(const std::string &line);
     static std::vector<std::string> findWords(const std::string &line, const unsigned short int numWords = 3);
   };
 };

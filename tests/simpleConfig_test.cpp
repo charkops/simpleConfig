@@ -54,3 +54,31 @@ TEST_CASE("isValidConfigLine") {
     REQUIRE_FALSE(SimpleConfig::isValidConfigLine(line));
   }
 };
+
+TEST_CASE("isValidConfigFile") {
+  SECTION("Valid file") {
+    SimpleConfig config ("../config/test.config");
+    REQUIRE(config.isValidConfigFile());
+  };
+
+  SECTION("Invalid file") {
+    SimpleConfig config ("../config/invalid.config");
+    REQUIRE_FALSE(config.isValidConfigFile());
+  };
+};
+
+TEST_CASE("isLineComment") {
+  SECTION ("Valid comment") {
+    const std::string validComment ("# this is a comment");
+    REQUIRE(SimpleConfig::isLineComment(validComment));
+    const std::string anotherValidComment ("  # This is also a comment");
+    REQUIRE(SimpleConfig::isLineComment(anotherValidComment));
+    const std::string multipleSpacesButValid ("  ####   thiss should be a comment");
+    REQUIRE(SimpleConfig::isLineComment(multipleSpacesButValid));
+  };
+
+  SECTION ("Invalid comment") {
+    const std::string invalidComment ("this#should be invalid");
+    REQUIRE_FALSE(SimpleConfig::isLineComment(invalidComment));
+  };
+}
