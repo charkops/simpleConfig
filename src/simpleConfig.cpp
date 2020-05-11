@@ -12,6 +12,11 @@ namespace simpleConfig {
     {
       if (!std::experimental::filesystem::exists(configFilePath_))
         throw std::runtime_error("Config file does not exist");
+
+      if (!SimpleConfig::isValidConfigFile())
+        throw std::runtime_error("Config file is not valid");
+
+      configInfo_ = parseFile();
     };
 
   std::vector<std::string> SimpleConfig::findWords(const std::string &line, const unsigned short int numWords) {
@@ -76,5 +81,48 @@ namespace simpleConfig {
       if (!SimpleConfig::isValidConfigLine(line)) return false;
     }
     return true;
-  };  
+  };
+
+
+  ConfigInfo SimpleConfig::parseFile() {
+    ConfigInfo info;
+    // Open file and parse line by line && add to info
+    std::string filePath = configFilePath_.u8string();
+    std::ifstream file (filePath);
+    std::string line;
+    while (getline(file, line)) {
+      // Parse line 
+      if (SimpleConfig::isValidConfigLine(line)) {
+        auto parsedLine = findWords(line);
+        auto name = parsedLine[0];
+        auto type = parsedLine[1];
+        auto value = parsedLine[2];
+
+        ConfigValue configValue;
+        configValue.name = name;
+        configValue.type = type;
+        configValue.value = value;
+
+        info.configValues.push_back(configValue);
+      }
+    }
+
+    return info;
+  };
+
+  // Overload operators
+  std::ostream& operator<< (std::ostream &os, const ConfigValue &value) {
+    os << "(" << value.name << ", " << value.type << ", " <<
+                  value.value << ")";
+    return os;
+  };
+
+  std::optional<ConfigValue> ConfigInfo::getConfigValue(const std::string &key) {
+    for (const auto &value : configValues)
+      if (key == value.name)
+        return std::optional<ConfigValue> {value};
+    return std::nullopt;
+  };
+
+  
 }
